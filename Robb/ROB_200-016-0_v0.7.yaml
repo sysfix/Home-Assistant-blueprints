@@ -1,6 +1,6 @@
 blueprint:
   name: XYZ.NINJA - DEVELOPMENT - Blueprint for RGB Remote control by ROBB smarrt and Sunricher (Iluminize)
-  description: V0.6
+  description: V0.7
   domain: automation
   input:
     remote:
@@ -126,6 +126,8 @@ action:
         data_template:
           entity_id: '{{ light_entity }}'
           transition: 1
+          color_temp: {{ trigger.event.data.args[0] }}
+
 
   - choose:
     - conditions: '{{ command == "step_with_on_off" }}'
