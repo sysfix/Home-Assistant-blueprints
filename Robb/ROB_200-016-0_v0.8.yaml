@@ -136,6 +136,7 @@ action:
         data_template:
           entity_id: '{{ light_entity }}'
           transition: 1
+          brightness_pct: 30
 
   - choose:
     - conditions: '{{ command == "move_hue" }}'
