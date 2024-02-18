@@ -1,15 +1,18 @@
 blueprint:
-  name: Robb RGBW Remote control (die lange witte)
-  description: DEVELOPMENT VERSION V0.1
+  name: XYZ.NINJA - DEVELOPMENT - Blueprint for RGB Remote control by ROBB smarrt and Sunricher (Iluminize)
+  description: V0.1
   domain: automation
   input:
     remote:
       name: 'Remote'
-      description: Robb ROB_200-016-0 remote to use
+      description: Select the remote control to use as input device.
       selector:
         device:
           integration: 'zha'
-          manufacturer: 'ROBB smarrt'
+          manufacturer: 
+          	- ROBB smarrt
+          	- Sunricher
+          	- iluminize
 
     group_1:
       name: Group 1
@@ -21,7 +24,7 @@ blueprint:
 
     group_2:
       name: Group 2
-      description: Light(s) to control when group 1 is selected
+      description: Light(s) to control when group 2 is selected
       default: []
       selector:
         entity:
@@ -29,7 +32,15 @@ blueprint:
 
     group_3:
       name: Group 3
-      description: Light(s) to control when group 1 is selected
+      description: Light(s) to control when group 3 is selected
+      default: []
+      selector:
+        entity:
+          domain: light
+
+    group_4:
+      name: Group 4
+      description: Light(s) to control when group 4 is selected
       default: []
       selector:
         entity:
@@ -56,6 +67,7 @@ variables:
   group_1: !input 'group_1'
   group_2: !input 'group_2'
   group_3: !input 'group_3'
+  group_4: !input 'group_4'
 
 
 trigger:
@@ -75,6 +87,8 @@ action:
           {{ group_2 }}
         {% elif endpoint_id == 3 %}
           {{ group_3 }}
+        {% elif endpoint_id == 4 %}
+          {{ group_4 }}
         {% endif %}
 
   - choose:
@@ -93,6 +107,23 @@ action:
           entity_id: '{{ light_entity }}'
           transition: 1
 
+
+  - choose:
+    - conditions: '{{ command == "move_to_color" }}'
+      sequence:
+      - service: light.turn_on
+        data_template:
+          entity_id: '{{ light_entity }}'
+          transition: 1
+
+  - choose:
+    - conditions: '{{ command == "move_to_color_temp" }}'
+      sequence:
+      - service: light.turn_on
+        data_template:
+          entity_id: '{{ light_entity }}'
+          transition: 1
+
   - choose:
     - conditions: '{{ command == "step_with_on_off" }}'
       sequence:
@@ -102,19 +133,39 @@ action:
           transition: 1
 
   - choose:
-    - conditions: '{{ command == "move_to_hue_and_saturation" }}'
+    - conditions: '{{ command == "move_hue" }}'
       sequence:
       - service: light.turn_on
         data_template:
           entity_id: '{{ light_entity }}'
-          hs_color: 
-            -  "{{ trigger.event.data.args[0] }}"
-            - "{{ trigger.event.data.args[1] }}"
+          transition: 1
 
   - choose:
-    - conditions: '{{ command == "move_to_color_temp" }}'
+    - conditions: '{{ command == "recall" }}'
       sequence:
       - service: light.turn_on
         data_template:
           entity_id: '{{ light_entity }}'
-          color_temp:   "{{ trigger.event.data.args[0] }}"
+          transition: 1
+
+
+
+
+
+#  - choose:
+#    - conditions: '{{ command == "move_to_hue_and_saturation" }}'
+#      sequence:
+#      - service: light.turn_on
+#        data_template:
+#          entity_id: '{{ light_entity }}'
+#          hs_color: 
+#            -  "{{ trigger.event.data.args[0] }}"
+#            - "{{ trigger.event.data.args[1] }}"
+#
+#  - choose:
+#    - conditions: '{{ command == "move_to_color_temp" }}'
+#      sequence:
+#      - service: light.turn_on
+#        data_template:
+#          entity_id: '{{ light_entity }}'
+#          color_temp:   "{{ trigger.event.data.args[0] }}"
