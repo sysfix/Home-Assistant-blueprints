@@ -9,10 +9,10 @@ blueprint:
       selector:
         device:
           integration: 'zha'
-          manufacturer: 
-          	- ROBB smarrt
-          	- Sunricher
-          	- iluminize
+          manufacturer: ROBB smarrt
+#          	- 
+#          	- Sunricher
+#          	- iluminize
 
     group_1:
       name: Group 1
