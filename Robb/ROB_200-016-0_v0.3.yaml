@@ -115,6 +115,9 @@ action:
         data_template:
           entity_id: '{{ light_entity }}'
           transition: 1
+          xy_color:
+            - {{ trigger.event.data.args[0] }}
+            - {{ trigger.event.data.args[1] }}
 
   - choose:
     - conditions: '{{ command == "move_to_color_temp" }}'
