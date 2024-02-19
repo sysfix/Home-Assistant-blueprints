@@ -1,0 +1,260 @@
+blueprint:
+  name: XYZ.NINJA 0.10.0 - DEVELOPMENT - Blueprint for RGB Remote control by ROBB smarrt
+    and Sunricher (Iluminize)
+  description: V0.10.1
+  domain: automation
+  input:
+    remote:
+      name: Remote
+      description: Select the remote control to use as input device.
+      selector:
+        device:
+          integration: zha
+          manufacturer: ROBB smarrt
+          multiple: false
+    group_1:
+      name: Group 1
+      description: Light(s) to control when group 1 is selected
+      default: []
+      selector:
+        entity:
+          domain:
+          - light
+          multiple: true
+    group_2:
+      name: Group 2
+      description: Light(s) to control when group 2 is selected
+      default: []
+      selector:
+        entity:
+          domain:
+          - light
+          multiple: true
+    group_3:
+      name: Group 3
+      description: Light(s) to control when group 3 is selected
+      default: []
+      selector:
+        entity:
+          domain:
+          - light
+          multiple: true
+    group_4:
+      name: Group 4
+      description: Light(s) to control when group 4 is selected
+      default: []
+      selector:
+        entity:
+          domain:
+          - light
+          multiple: true
+    brightness_step_value:
+      name: Brightness step value
+      description: Step value for increasing / decreasing brightness
+      default: 10
+      selector:
+        number:
+          min: 0.0
+          max: 100.0
+          mode: slider
+          step: 1.0
+          unit_of_measurement: '%'
+
+    group_1_s1:
+      name: Group 1 Scene 1
+      description: Scene to activate
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+    group_1_s2:
+      name: Group 1 Scene 2
+      description: Scene to activate
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+    group_1_s3:
+      name: Group 1 Scene 3
+      description: Scene to activate
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+
+
+    group_2_s1:
+      name: Group 2 Scene 1
+      description: Scene to activate
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+    group_2_s2:
+      name: Group 2 Scene 2
+      description: Scene to activate
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+    group_2_s3:
+      name: Group 2 Scene 3
+      description: Scene to activate
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+
+
+    group_3_s1:
+      name: Group 3 Scene 1
+      description: Scene to activate
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+    group_3_s2:
+      name: Group 3 Scene 2
+      description: Scene to activate
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+    group_3_s3:
+      name: Group 3 Scene 3
+      description: Scene to activate
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+
+
+    group_4_s1:
+      name: Group 4 Scene 1
+      description: Scene to activate
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+    group_4_s2:
+      name: Group 4 Scene 2
+      description: Scene to activate
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+    group_4_s3:
+      name: Group 4 Scene 3
+      description: Scene to activate
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+
+  source_url: https://github.com/sysfix/Home-Assistant-blueprints/blob/main/Robb/ROB_200-016-0_v0.9.yaml
+mode: parallel
+max_exceeded: silent
+variables:
+  brightness_step_value: !input brightness_step_value
+  group_1: !input group_1
+  group_2: !input group_2
+  group_3: !input group_3
+  group_4: !input group_4
+trigger:
+- platform: event
+  event_type: zha_event
+  event_data:
+    device_id: !input remote
+action:
+- variables:
+    command: '{{ trigger.event.data.command }}'
+    endpoint_id: '{{ trigger.event.data.endpoint_id }}'
+    light_entity: "{% if endpoint_id == 1 %}\n  {{ group_1 }}\n{% elif endpoint_id
+      == 2 %}\n  {{ group_2 }}\n{% elif endpoint_id == 3 %}\n  {{ group_3 }}\n{% elif
+      endpoint_id == 4 %}\n  {{ group_4 }}\n{% endif %}"
+- choose:
+  - conditions: '{{ command == "on" }}'
+    sequence:
+    - service: light.turn_on
+      data_template:
+        '{{ light_entity }}'
+        transition: 1
+- choose:
+  - conditions: '{{ command == "off" }}'
+    sequence:
+    - service: light.turn_off
+      data_template:
+        '{{ light_entity }}'
+        transition: 1
+- choose:
+  - conditions: '{{ command == "move_to_color" }}'
+    sequence:
+    - service: light.turn_on
+      data_template:
+        entity_id: '{{ light_entity }}'
+        transition: 1
+        xy_color:
+        - 0.{{ trigger.event.data.args[0] }}
+        - 0.{{ trigger.event.data.args[1] }}
+- choose:
+  - conditions: '{{ command == "move_to_color_temp" }}'
+    sequence:
+    - service: light.turn_on
+      data_template:
+        entity_id: '{{ light_entity }}'
+        transition: 1
+        color_temp: '{{ trigger.event.data.args[0] }}'
+- choose:
+  - conditions: '{{ command == "step_with_on_off" and trigger.event.data.args[0] == 0 }}'
+    sequence:
+    - service: light.turn_on
+      data_template:
+        entity_id: '{{ light_entity }}'
+        transition: 1
+        brightness_step_pct: '{{brightness_step_value}}'
+        
+  - conditions: '{{ command == "step_with_on_off" and trigger.event.data.args[0] == 1 }}'
+    sequence:
+    - service: light.turn_on
+      data_template:
+        entity_id: '{{ light_entity }}'
+        transition: 1
+        brightness_step_pct: '-{{brightness_step_value}}'
+        
+  - conditions: '{{ command == "move_hue" }}'
+    sequence:
+    - service: light.turn_on
+      data_template:
+        entity_id: '{{ light_entity }}'
+        transition: 1
+- choose:
+  - conditions: '{{ command == "recall" }}'
+    sequence:
+    - service: light.turn_on
+      data_template:
+        entity_id: '{{ light_entity }}'
+        transition: 1
