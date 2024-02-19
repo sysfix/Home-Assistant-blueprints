@@ -1,7 +1,7 @@
 blueprint:
-  name: XYZ.NINJA 8.1 - DEVELOPMENT - Blueprint for RGB Remote control by ROBB smarrt
+  name: XYZ.NINJA 0.10.0 - DEVELOPMENT - Blueprint for RGB Remote control by ROBB smarrt
     and Sunricher (Iluminize)
-  description: V0.8.1
+  description: V0.10.1
   domain: automation
   input:
     remote:
@@ -59,6 +59,122 @@ blueprint:
           mode: slider
           step: 1.0
           unit_of_measurement: '%'
+
+    group_1_s1:
+      name: Group 1 Scene 1
+      description: Light(s) to control when group 1 is selected
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+    group_1_s2:
+      name: Group 1 Scene 2
+      description: Light(s) to control when group 2 is selected
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+    group_1_s3:
+      name: Group 1 Scene 3
+      description: Light(s) to control when group 3 is selected
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+
+
+    group_2_s1:
+      name: Group 2 Scene 1
+      description: Light(s) to control when group 1 is selected
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+    group_2_s2:
+      name: Group 2 Scene 2
+      description: Light(s) to control when group 2 is selected
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+    group_2_s3:
+      name: Group 2 Scene 3
+      description: Light(s) to control when group 3 is selected
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+
+
+    group_3_s1:
+      name: Group 3 Scene 1
+      description: Light(s) to control when group 1 is selected
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+    group_3_s2:
+      name: Group 3 Scene 2
+      description: Light(s) to control when group 2 is selected
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+    group_3_s3:
+      name: Group 3 Scene 3
+      description: Light(s) to control when group 3 is selected
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+
+
+    group_4_s1:
+      name: Group 4 Scene 1
+      description: Light(s) to control when group 1 is selected
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+    group_4_s2:
+      name: Group 4 Scene 2
+      description: Light(s) to control when group 2 is selected
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+    group_4_s3:
+      name: Group 4 Scene 3
+      description: Light(s) to control when group 3 is selected
+      default: []
+      selector:
+        entity:
+          domain:
+          - scene
+          multiple: false
+
   source_url: https://github.com/sysfix/Home-Assistant-blueprints/blob/main/Robb/ROB_200-016-0_v0.9.yaml
 mode: parallel
 max_exceeded: silent
