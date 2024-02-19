@@ -201,14 +201,14 @@ action:
     sequence:
     - service: light.turn_on
       data_template:
-        '{{ light_entity }}'
+        entity_id: '{{ light_entity }}'
         transition: 1
 - choose:
   - conditions: '{{ command == "off" }}'
     sequence:
     - service: light.turn_off
       data_template:
-        '{{ light_entity }}'
+        entity_id: '{{ light_entity }}'
         transition: 1
 - choose:
   - conditions: '{{ command == "move_to_color" }}'
